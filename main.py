@@ -193,12 +193,40 @@ def send_email_with_pdf(email_to: str, pdf_buffer: BytesIO, outfit_description: 
             )
         
         # Отправка через SMTP с таймаутом и обработкой ошибок
+        # Пробуем разные порты и методы подключения
+        smtp_configs = [
+            ('smtp.gmail.com', 587, 'TLS'),
+            ('smtp.gmail.com', 465, 'SSL'),
+        ]
+        
+        server = None
+        last_error = None
+        
+        for host, port, method in smtp_configs:
+            try:
+                logger.info(f"Попытка подключения к {host}:{port} ({method})...")
+                if method == 'SSL':
+                    import ssl
+                    server = smtplib.SMTP_SSL(host, port, timeout=30)
+                else:
+                    server = smtplib.SMTP(host, port, timeout=30)
+                logger.info(f"Соединение с {host}:{port} установлено")
+                break
+            except (OSError, smtplib.SMTPException) as e:
+                logger.warning(f"Не удалось подключиться к {host}:{port}: {str(e)}")
+                last_error = e
+                continue
+        
+        if server is None:
+            raise OSError(f"Не удалось подключиться ни к одному SMTP серверу. Последняя ошибка: {last_error}")
+        
         try:
-            logger.info(f"Подключение к SMTP серверу smtp.gmail.com:587...")
-            server = smtplib.SMTP('smtp.gmail.com', 587, timeout=30)
-            logger.info("SMTP соединение установлено, запуск TLS...")
-            server.starttls()
-            logger.info("TLS установлен, выполнение входа...")
+            # TLS нужен только для порта 587, для 465 уже используется SSL
+            if hasattr(server, 'starttls'):
+                logger.info("Запуск TLS...")
+                server.starttls()
+                logger.info("TLS установлен")
+            logger.info("Выполнение входа...")
             server.login(gmail_email, gmail_password)
             logger.info("Вход выполнен, отправка письма...")
             text = msg.as_string()
