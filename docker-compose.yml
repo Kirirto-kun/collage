@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  pdf-generator:
+    build: .
+    ports:
+      - "8020:8020"
+    env_file:
+      - .env
+    volumes:
+      - ./templates:/app/templates
+    restart: unless-stopped
+
