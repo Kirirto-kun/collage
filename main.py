@@ -179,13 +179,31 @@ def send_email_with_pdf(email_to: str, pdf_buffer: BytesIO, outfit_description: 
         )
         msg.attach(part)
         
-        # Отправка через SMTP
-        server = smtplib.SMTP('smtp.gmail.com', 587)
-        server.starttls()
-        server.login(gmail_email, gmail_password)
-        text = msg.as_string()
-        server.sendmail(gmail_email, email_to, text)
-        server.quit()
+        # Отправка через SMTP с таймаутом и обработкой ошибок
+        try:
+            logger.info(f"Подключение к SMTP серверу smtp.gmail.com:587...")
+            server = smtplib.SMTP('smtp.gmail.com', 587, timeout=30)
+            logger.info("SMTP соединение установлено, запуск TLS...")
+            server.starttls()
+            logger.info("TLS установлен, выполнение входа...")
+            server.login(gmail_email, gmail_password)
+            logger.info("Вход выполнен, отправка письма...")
+            text = msg.as_string()
+            server.sendmail(gmail_email, email_to, text)
+            server.quit()
+            logger.info(f"Письмо успешно отправлено на {email_to}")
+        except OSError as e:
+            logger.error(f"Ошибка сети при отправке email: {str(e)}")
+            raise HTTPException(
+                status_code=500, 
+                detail=f"Не удалось подключиться к SMTP серверу. Проверьте сетевые настройки Docker. Ошибка: {str(e)}"
+            )
+        except smtplib.SMTPException as e:
+            logger.error(f"Ошибка SMTP: {str(e)}")
+            raise HTTPException(
+                status_code=500,
+                detail=f"Ошибка SMTP при отправке email: {str(e)}"
+            )
         
         logger.info(f"PDF успешно отправлен на {email_to}")
         
