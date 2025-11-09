@@ -179,6 +179,19 @@ def send_email_with_pdf(email_to: str, pdf_buffer: BytesIO, outfit_description: 
         )
         msg.attach(part)
         
+        # Диагностика сети перед отправкой
+        import socket
+        try:
+            logger.info("Проверка DNS резолвинга smtp.gmail.com...")
+            socket.gethostbyname('smtp.gmail.com')
+            logger.info("DNS резолвинг успешен")
+        except socket.gaierror as e:
+            logger.error(f"Ошибка DNS резолвинга: {str(e)}")
+            raise HTTPException(
+                status_code=500,
+                detail=f"Не удалось разрешить имя smtp.gmail.com. Проверьте DNS настройки Docker. Ошибка: {str(e)}"
+            )
+        
         # Отправка через SMTP с таймаутом и обработкой ошибок
         try:
             logger.info(f"Подключение к SMTP серверу smtp.gmail.com:587...")
@@ -194,22 +207,23 @@ def send_email_with_pdf(email_to: str, pdf_buffer: BytesIO, outfit_description: 
             logger.info(f"Письмо успешно отправлено на {email_to}")
         except OSError as e:
             logger.error(f"Ошибка сети при отправке email: {str(e)}")
-            raise HTTPException(
-                status_code=500, 
-                detail=f"Не удалось подключиться к SMTP серверу. Проверьте сетевые настройки Docker. Ошибка: {str(e)}"
-            )
+            # Не поднимаем исключение, так как это выполняется в фоне
+            # Просто логируем ошибку
+            logger.error(f"Детали ошибки сети: {type(e).__name__}: {str(e)}")
+            logger.error(f"PDF НЕ был отправлен на {email_to} из-за сетевой ошибки")
+            return  # Выходим, не логируя успех
         except smtplib.SMTPException as e:
             logger.error(f"Ошибка SMTP: {str(e)}")
-            raise HTTPException(
-                status_code=500,
-                detail=f"Ошибка SMTP при отправке email: {str(e)}"
-            )
+            logger.error(f"Детали ошибки SMTP: {type(e).__name__}: {str(e)}")
+            logger.error(f"PDF НЕ был отправлен на {email_to} из-за ошибки SMTP")
+            return  # Выходим, не логируя успех
         
         logger.info(f"PDF успешно отправлен на {email_to}")
         
     except Exception as e:
-        logger.error(f"Ошибка отправки email: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Ошибка отправки email: {str(e)}")
+        logger.error(f"Ошибка отправки email: {str(e)}", exc_info=True)
+        # Не поднимаем исключение, так как это выполняется в фоне
+        # PDF уже сгенерирован и ответ отправлен клиенту
 
 def render_html_template(outfit: Outfit) -> str:
     """Рендерит HTML шаблон с данными outfit"""
