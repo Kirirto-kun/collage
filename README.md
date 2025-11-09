@@ -8,6 +8,12 @@ FastAPI сервер, который принимает данные об outfit
 
 ## Установка
 
+### Для Docker (рекомендуется)
+
+Просто создайте файл `.env` в корне проекта (см. ниже) и используйте docker-compose.
+
+### Для локальной установки
+
 1. Установите зависимости:
 ```bash
 pip install -r requirements.txt
@@ -31,11 +37,40 @@ GMAIL_PASSWORD=your-app-password
 
 ## Запуск
 
-```bash
-uvicorn main:app --reload
+### Вариант 1: Docker (рекомендуется)
+
+1. Создайте файл `.env` в корне проекта:
+```
+GMAIL_EMAIL=your-email@gmail.com
+GMAIL_PASSWORD=your-app-password
 ```
 
-Сервер будет доступен по адресу: `http://localhost:8000`
+2. Запустите через docker-compose:
+```bash
+docker-compose up --build
+```
+
+Или через Docker напрямую:
+```bash
+docker build -t pdf-generator .
+docker run -p 8020:8020 --env-file .env pdf-generator
+```
+
+Сервер будет доступен по адресу: `http://localhost:8020`
+
+### Вариант 2: Локальный запуск
+
+1. Установите зависимости:
+```bash
+pip install -r requirements.txt
+```
+
+2. Запустите сервер:
+```bash
+uvicorn main:app --host 0.0.0.0 --port 8020 --reload
+```
+
+Сервер будет доступен по адресу: `http://localhost:8020`
 
 ## API
 
@@ -86,6 +121,9 @@ collage/
 ├── templates/
 │   └── outfit.html      # HTML шаблон с карточками товаров
 ├── requirements.txt     # Зависимости Python
+├── Dockerfile           # Docker образ
+├── docker-compose.yml   # Docker Compose конфигурация
+├── .dockerignore        # Исключения для Docker
 ├── .env                 # Переменные окружения (создать вручную)
 └── README.md            # Документация
 ```

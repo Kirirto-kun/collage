@@ -3,7 +3,8 @@ uvicorn[standard]==0.24.0
 pydantic==2.5.0
 pydantic[email]==2.5.0
 jinja2==3.1.2
-weasyprint==60.1
+weasyprint==62.3
+Pillow>=10.0.0
 python-dotenv==1.0.0
 python-multipart==0.0.6
 

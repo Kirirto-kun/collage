@@ -50,11 +50,15 @@
         }
         
         .items-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            grid-template-rows: repeat(2, 1fr);
-            gap: 15px;
-            min-height: 600px;
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: separate;
+            border-spacing: 10px;
+        }
+        
+        .items-row {
+            display: table-row;
         }
         
         .item-card {
@@ -62,10 +66,9 @@
             border-radius: 8px;
             overflow: hidden;
             background: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.2s;
+            display: table-cell;
+            vertical-align: top;
+            width: 25%;
         }
         
         .item-image-container {
@@ -73,24 +76,18 @@
             height: 200px;
             overflow: hidden;
             background: #f5f5f5;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            text-align: center;
         }
         
         .item-image {
             width: 100%;
-            height: 100%;
+            height: 200px;
             object-fit: cover;
             cursor: pointer;
         }
         
         .item-info {
             padding: 12px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
         }
         
         .item-name {
@@ -100,17 +97,16 @@
             margin-bottom: 8px;
             line-height: 1.4;
             min-height: 40px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
             overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
         }
         
         .item-price {
             font-size: 16px;
             font-weight: bold;
             color: #27ae60;
-            margin-top: auto;
+            margin-top: 8px;
         }
         
         .item-link {
@@ -135,26 +131,31 @@
     
     {% for page_items in pages %}
     <div class="page">
-        <div class="items-grid">
-            {% for item in page_items %}
-            <div class="item-card">
-                <a href="{{ item.link }}" class="item-link" target="_blank">
-                    <div class="item-image-container">
-                        <img src="{{ item.image_url }}" alt="{{ item.name }}" class="item-image" />
-                    </div>
-                    <div class="item-info">
-                        <div class="item-name">{{ item.name }}</div>
-                        <div class="item-price">{{ item.price }}</div>
-                    </div>
-                </a>
-            </div>
+        <table class="items-grid">
+            {% for row in range(0, page_items|length, 4) %}
+            <tr class="items-row">
+                {% for col in range(4) %}
+                    {% set index = row + col %}
+                    {% if index < page_items|length %}
+                        {% set item = page_items[index] %}
+                        <td class="item-card">
+                            <a href="{{ item.link }}" class="item-link" target="_blank">
+                                <div class="item-image-container">
+                                    <img src="{{ item.image_url }}" alt="{{ item.name }}" class="item-image" />
+                                </div>
+                                <div class="item-info">
+                                    <div class="item-name">{{ item.name }}</div>
+                                    <div class="item-price">{{ item.price }}</div>
+                                </div>
+                            </a>
+                        </td>
+                    {% else %}
+                        <td class="item-card" style="visibility: hidden;">&nbsp;</td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
             {% endfor %}
-            
-            {# Заполняем пустые места, если товаров меньше 8 #}
-            {% for i in range(8 - page_items|length) %}
-            <div class="item-card" style="visibility: hidden;"></div>
-            {% endfor %}
-        </div>
+        </table>
     </div>
     {% endfor %}
 </body>
