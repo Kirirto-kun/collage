@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Коллаж образа</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root{
+  --bg:#ffffff;
+  --text:#111;
+  --canvas-max:1200px;
+  --outer:clamp(12px,4vw,40px);
+  --shadow:drop-shadow(0 10px 16px rgba(0,0,0,.16))
+           drop-shadow(0 3px 6px rgba(0,0,0,.10));
+  --brand:clamp(11px,0.9vw,16px);
+  --type:clamp(10px,0.8vw,14px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Ubuntu,"Helvetica Neue",Arial,"Noto Sans",sans-serif;
+  background:#f5f6f8;color:var(--text);padding:16px;
+}
+.canvas{
+  position:relative;width:100%;max-width:var(--canvas-max);min-height:600px;
+  background:var(--bg);border-radius:20px;box-shadow:0 8px 36px rgba(0,0,0,.05);overflow:visible;
+  padding:var(--outer);
+}
+.slot{
+  position:absolute;
+  filter:var(--shadow);
+  min-width:50px;
+  min-height:50px;
+  padding:0;
+  background:transparent;
+  border-radius:0;
+  box-shadow:none;
+  border:none;
+  overflow:visible;
+}
+.slot img{
+  width:100%;
+  height:auto;
+  display:block;
+  object-fit:contain;
+  min-height:50px;
+  max-width:100%;
+  padding:0;
+  box-sizing:border-box;
+  filter:drop-shadow(0 4px 12px rgba(0,0,0,0.15)) drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+.caption{
+  position:absolute;
+  left:0;
+  right:0;
+  top:100%;
+  margin-top:12px;
+  text-align:center;
+  line-height:1.25;
+  padding:0;
+  background:transparent;
+  border-radius:0;
+  box-shadow:none;
+  border:none;
+}
+.brand{font-size:var(--brand);font-weight:600;text-transform:uppercase;letter-spacing:.03em;display:block}
+.type{font-size:var(--type);margin-top:2px;display:block;opacity:0.7}
+a{color:inherit;text-decoration:none;display:block}
+
+/* Позиции элементов коллажа - ромбовая композиция */
+.hat      {left:17.7%; top:4.7%;  width:15.9%; z-index:1;}
+.coat     {left:9.9%;  top:19.0%; width:32.1%; z-index:9;} /* Опущен ниже */
+.blazer   {left:34.2%; top:10.6%; width:31.2%; z-index:14;}
+.tie      {left:69.6%; top:14.4%; width:9.9%;  z-index:4;}
+.trousers {left:62.2%; top:42.0%; width:23.5%; z-index:6;} /* Увеличен и опущен ниже */
+.gloves   {left:56.3%; top:51.9%; width:12.8%; z-index:15;}
+.bag      {left:26.7%; top:59.8%; width:24%;   z-index:10;}
+.shoes    {left:42.9%; top:84.3%; width:20.4%; z-index:11;}
+</style>
+</head>
+<body>
+<section class="canvas">
+
+  {% if collage_items.hat %}
+  <a class="slot hat" href="{{ collage_items.hat.link }}" target="_blank">
+    {% if collage_items.hat.processed_image %}
+    <img src="{{ collage_items.hat.processed_image }}" alt="{{ collage_items.hat.name }}">
+    {% else %}
+    <img src="{{ collage_items.hat.image_url }}" alt="{{ collage_items.hat.name }}">
+    {% endif %}
+    <div class="caption">
+      <div class="brand">{{ collage_items.hat.name }}</div>
+      <div class="type">{{ collage_items.hat.slot_label or 'ACCESSORY' }}</div>
+    </div>
+  </a>
+  {% endif %}
+
+  {% if collage_items.coat %}
+  <a class="slot coat" href="{{ collage_items.coat.link }}" target="_blank">
+    {% if collage_items.coat.processed_image %}
+    <img src="{{ collage_items.coat.processed_image }}" alt="{{ collage_items.coat.name }}">
+    {% else %}
+    <img src="{{ collage_items.coat.image_url }}" alt="{{ collage_items.coat.name }}">
+    {% endif %}
+    <div class="caption">
+      <div class="brand">{{ collage_items.coat.name }}</div>
+      <div class="type">{{ collage_items.coat.slot_label or 'TOP' }}</div>
+    </div>
+  </a>
+  {% endif %}
+
+  {% if collage_items.blazer %}
+  <a class="slot blazer" href="{{ collage_items.blazer.link }}" target="_blank">
+    {% if collage_items.blazer.processed_image %}
+    <img src="{{ collage_items.blazer.processed_image }}" alt="{{ collage_items.blazer.name }}">
+    {% else %}
+    <img src="{{ collage_items.blazer.image_url }}" alt="{{ collage_items.blazer.name }}">
+    {% endif %}
+    <div class="caption">
+      <div class="brand">{{ collage_items.blazer.name }}</div>
+      <div class="type">{{ collage_items.blazer.slot_label or 'TOP' }}</div>
+    </div>
+  </a>
+  {% endif %}
+
+  {% if collage_items.tie %}
+  <a class="slot tie" href="{{ collage_items.tie.link }}" target="_blank">
+    {% if collage_items.tie.processed_image %}
+    <img src="{{ collage_items.tie.processed_image }}" alt="{{ collage_items.tie.name }}">
+    {% else %}
+    <img src="{{ collage_items.tie.image_url }}" alt="{{ collage_items.tie.name }}">
+    {% endif %}
+    <div class="caption">
+      <div class="brand">{{ collage_items.tie.name }}</div>
+      <div class="type">{{ collage_items.tie.slot_label or 'TOP' }}</div>
+    </div>
+  </a>
+  {% endif %}
+
+  {% if collage_items.trousers %}
+  <a class="slot trousers" href="{{ collage_items.trousers.link }}" target="_blank">
+    {% if collage_items.trousers.processed_image %}
+    <img src="{{ collage_items.trousers.processed_image }}" alt="{{ collage_items.trousers.name }}">
+    {% else %}
+    <img src="{{ collage_items.trousers.image_url }}" alt="{{ collage_items.trousers.name }}">
+    {% endif %}
+    <div class="caption">
+      <div class="brand">{{ collage_items.trousers.name }}</div>
+      <div class="type">{{ collage_items.trousers.slot_label or 'BOTTOM' }}</div>
+    </div>
+  </a>
+  {% endif %}
+
+  {% if collage_items.gloves %}
+  <a class="slot gloves" href="{{ collage_items.gloves.link }}" target="_blank">
+    {% if collage_items.gloves.processed_image %}
+    <img src="{{ collage_items.gloves.processed_image }}" alt="{{ collage_items.gloves.name }}">
+    {% else %}
+    <img src="{{ collage_items.gloves.image_url }}" alt="{{ collage_items.gloves.name }}">
+    {% endif %}
+    <div class="caption">
+      <div class="brand">{{ collage_items.gloves.name }}</div>
+      <div class="type">{{ collage_items.gloves.slot_label or 'ACCESSORY' }}</div>
+    </div>
+  </a>
+  {% endif %}
+
+  {% if collage_items.bag %}
+  <a class="slot bag" href="{{ collage_items.bag.link }}" target="_blank">
+    {% if collage_items.bag.processed_image %}
+    <img src="{{ collage_items.bag.processed_image }}" alt="{{ collage_items.bag.name }}">
+    {% else %}
+    <img src="{{ collage_items.bag.image_url }}" alt="{{ collage_items.bag.name }}">
+    {% endif %}
+    <div class="caption">
+      <div class="brand">{{ collage_items.bag.name }}</div>
+      <div class="type">{{ collage_items.bag.slot_label or 'ACCESSORY' }}</div>
+    </div>
+  </a>
+  {% endif %}
+
+  {% if collage_items.shoes %}
+  <a class="slot shoes" href="{{ collage_items.shoes.link }}" target="_blank">
+    {% if collage_items.shoes.processed_image %}
+    <img src="{{ collage_items.shoes.processed_image }}" alt="{{ collage_items.shoes.name }}">
+    {% else %}
+    <img src="{{ collage_items.shoes.image_url }}" alt="{{ collage_items.shoes.name }}">
+    {% endif %}
+    <div class="caption">
+      <div class="brand">{{ collage_items.shoes.name }}</div>
+      <div class="type">{{ collage_items.shoes.slot_label or 'SHOES' }}</div>
+    </div>
+  </a>
+  {% endif %}
+
+</section>
+</body>
+</html>

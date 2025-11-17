@@ -3,16 +3,16 @@ version: '3.8'
 services:
   pdf-generator:
     build: .
-    # При использовании network_mode: host порты не нужны
-    # Контейнер использует порты хоста напрямую
-    # ports:
-    #   - "8020:8020"
+    ports:
+      - "8020:8020"
     env_file:
       - .env
     volumes:
       - ./templates:/app/templates
     restart: unless-stopped
-    # Используем сеть хоста для решения проблемы с исходящими соединениями
-    # Это позволяет контейнеру использовать сетевой стек хоста
-    network_mode: host
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    # Для решения проблемы с SMTP на Windows/WSL можно использовать extra_hosts
+    # или настроить сеть Docker правильно
 

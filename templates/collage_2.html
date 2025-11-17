@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Коллаж образа 2500×2500</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #111;
+      width: 2500px;
+      height: 2500px;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      overflow: hidden;
+    }
+
+    /* Полотно 2500×2500 */
+    .canvas {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 2500px;
+      height: 2500px;
+      background: #ffffff;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    /* ==================== top_main (джемпер) ==================== */
+    .top_main {
+      position: absolute;
+      left: 840px;
+      top: 215px;
+      width: 800px;
+      text-align: center;
+    }
+    .top_main-title {
+      font-size: 32px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .top_main-brand {
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    .top_main-image {
+      display: block;
+      width: 800px;   /* фикс по X */
+      height: auto;   /* пропорции */
+    }
+    .top_main-image-link {
+      display: block;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    /* ==================== accessory_upper (шарф) ==================== */
+    .accessory_upper {
+      position: absolute;
+      left: 440px;
+      top: 110px;
+      width: 400px;
+      text-align: left;
+    }
+    .accessory_upper-title {
+      font-size: 24px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .accessory_upper-brand {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .accessory_upper-image {
+      display: block;
+      width: 400px;   /* фикс по X */
+      height: auto;
+    }
+    .accessory_upper-image-link {
+      display: block;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    /* ==================== top_second (куртка) ==================== */
+    /* картинка */
+    .top_second-image {
+      position: absolute;
+      left: 220px;
+      top: 420px;
+      width: 800px;
+      height: 1500px;
+      text-align: center;
+    }
+    .top_second-image-img {
+      display: block;
+      width: 800px;   /* фикс по X */
+      height: auto;
+      max-height: 1500px;
+    }
+    .top_second-image-link {
+      display: block;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    /* текст */
+    .top_second-text {
+      position: absolute;
+      left: 20px;
+      top: 450px;
+      width: 400px;
+      text-align: left;
+    }
+    .top_second-title {
+      font-size: 24px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      line-height: 1.3;
+      margin-bottom: 6px;
+      word-wrap: break-word;
+    }
+    .top_second-brand {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      line-height: 1.3;
+      word-wrap: break-word;
+    }
+
+    /* ==================== bottom (джинсы) ==================== */
+    .bottom-image {
+      position: absolute;
+      left: 1520px;
+      top: 960px;
+      width: 500px;
+      height: 1500px;
+      text-align: center;
+    }
+    .bottom-image-img {
+      display: block;
+      width: 500px;   /* фикс по X */
+      height: auto;
+    }
+    .bottom-image-link {
+      display: block;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .bottom-text {
+      position: absolute;
+      left: 2050px;
+      top: 960px;
+      width: 400px;
+      text-align: left;
+    }
+    .bottom-title {
+      font-size: 24px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      line-height: 1.3;
+      margin-bottom: 6px;
+      word-wrap: break-word;
+    }
+    .bottom-brand {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      line-height: 1.3;
+      word-wrap: break-word;
+    }
+
+    /* ==================== shoes (кроссовки) ==================== */
+    .shoes-row {
+      position: absolute;
+      left: 500px;          /* чтобы картинка начиналась в x ≈ 1040 */
+      top: 2050px;
+      width: 1080px;        /* 500 (текст) + 40 (gap) + 540 (картинка) */
+      height: 340px;
+      display: flex;
+      align-items: center;
+      column-gap: 40px;
+    }
+    .shoes-text {
+      width: 500px;
+      text-align: left;
+    }
+    .shoes-title {
+      font-size: 22px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      line-height: 1.4;
+      margin-bottom: 6px;
+      word-wrap: break-word;
+    }
+    .shoes-brand {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      line-height: 1.3;
+      word-wrap: break-word;
+    }
+    .shoes-image {
+      display: block;
+      width: 540px;  /* фикс по X */
+      height: auto;
+      max-height: 340px;
+    }
+    .shoes-image-link {
+      display: block;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    /* ==================== accessory_lower (рюкзак/сумка) ==================== */
+    .accessory_lower {
+      position: absolute;
+      left: 690px;
+      top: 1480px;
+      width: 580px;
+      height: 500px;
+      text-align: left;
+    }
+    .accessory_lower-title {
+      font-size: 22px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      line-height: 1.4;
+      margin-bottom: 6px;
+      word-wrap: break-word;
+    }
+    .accessory_lower-brand {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      line-height: 1.3;
+      margin-bottom: 12px;
+      word-wrap: break-word;
+    }
+    .accessory_lower-image {
+      display: block;
+      width: 580px;  /* фикс по X */
+      height: auto;
+    }
+    .accessory_lower-image-link {
+      display: block;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    @media print {
+      body {
+        background: #fff;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="canvas">
+
+    {% if collage_items.top_main %}
+    <!-- top_main (кофта / джемпер) -->
+    <div class="top_main">
+      <div class="top_main-title">{{ collage_items.top_main.title }}</div>
+      <div class="top_main-brand">{{ collage_items.top_main.brand }}</div>
+      {% if collage_items.top_main.link %}
+      <a href="{{ collage_items.top_main.link }}" target="_blank" class="top_main-image-link">
+        <img
+          class="top_main-image"
+          src="{{ collage_items.top_main.image_url }}"
+          alt="{{ collage_items.top_main.name }}"
+        >
+      </a>
+      {% else %}
+      <img
+        class="top_main-image"
+        src="{{ collage_items.top_main.image_url }}"
+        alt="{{ collage_items.top_main.name }}"
+      >
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {% if collage_items.accessory_upper %}
+    <!-- accessory_upper (шарф) -->
+    <div class="accessory_upper">
+      <div class="accessory_upper-title">{{ collage_items.accessory_upper.title }}</div>
+      <div class="accessory_upper-brand">{{ collage_items.accessory_upper.brand }}</div>
+      {% if collage_items.accessory_upper.link %}
+      <a href="{{ collage_items.accessory_upper.link }}" target="_blank" class="accessory_upper-image-link">
+        <img
+          class="accessory_upper-image"
+          src="{{ collage_items.accessory_upper.image_url }}"
+          alt="{{ collage_items.accessory_upper.name }}"
+        >
+      </a>
+      {% else %}
+      <img
+        class="accessory_upper-image"
+        src="{{ collage_items.accessory_upper.image_url }}"
+        alt="{{ collage_items.accessory_upper.name }}"
+      >
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {% if collage_items.top_second %}
+    <!-- top_second (куртка) -->
+    <div class="top_second-image">
+      {% if collage_items.top_second.link %}
+      <a href="{{ collage_items.top_second.link }}" target="_blank" class="top_second-image-link">
+        <img
+          class="top_second-image-img"
+          src="{{ collage_items.top_second.image_url }}"
+          alt="{{ collage_items.top_second.name }}"
+        >
+      </a>
+      {% else %}
+      <img
+        class="top_second-image-img"
+        src="{{ collage_items.top_second.image_url }}"
+        alt="{{ collage_items.top_second.name }}"
+      >
+      {% endif %}
+    </div>
+    <div class="top_second-text">
+      <div class="top_second-title">{{ collage_items.top_second.title }}</div>
+      <div class="top_second-brand">{{ collage_items.top_second.brand }}</div>
+    </div>
+    {% endif %}
+
+    {% if collage_items.bottom %}
+    <!-- bottom (джинсы) -->
+    <div class="bottom-image">
+      {% if collage_items.bottom.link %}
+      <a href="{{ collage_items.bottom.link }}" target="_blank" class="bottom-image-link">
+        <img
+          class="bottom-image-img"
+          src="{{ collage_items.bottom.image_url }}"
+          alt="{{ collage_items.bottom.name }}"
+        >
+      </a>
+      {% else %}
+      <img
+        class="bottom-image-img"
+        src="{{ collage_items.bottom.image_url }}"
+        alt="{{ collage_items.bottom.name }}"
+      >
+      {% endif %}
+    </div>
+    <div class="bottom-text">
+      <div class="bottom-title">{{ collage_items.bottom.title }}</div>
+      <div class="bottom-brand">{{ collage_items.bottom.brand }}</div>
+    </div>
+    {% endif %}
+
+    {% if collage_items.shoes %}
+    <!-- shoes (кроссовки) -->
+    <div class="shoes-row">
+      <div class="shoes-text">
+        <div class="shoes-title">{{ collage_items.shoes.title }}</div>
+        <div class="shoes-brand">{{ collage_items.shoes.brand }}</div>
+      </div>
+      {% if collage_items.shoes.link %}
+      <a href="{{ collage_items.shoes.link }}" target="_blank" class="shoes-image-link">
+        <img
+          class="shoes-image"
+          src="{{ collage_items.shoes.image_url }}"
+          alt="{{ collage_items.shoes.name }}"
+        >
+      </a>
+      {% else %}
+      <img
+        class="shoes-image"
+        src="{{ collage_items.shoes.image_url }}"
+        alt="{{ collage_items.shoes.name }}"
+      >
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {% if collage_items.accessory_lower %}
+    <!-- accessory_lower (рюкзак / сумка) -->
+    <div class="accessory_lower">
+      <div class="accessory_lower-title">{{ collage_items.accessory_lower.title }}</div>
+      <div class="accessory_lower-brand">{{ collage_items.accessory_lower.brand }}</div>
+      {% if collage_items.accessory_lower.link %}
+      <a href="{{ collage_items.accessory_lower.link }}" target="_blank" class="accessory_lower-image-link">
+        <img
+          class="accessory_lower-image"
+          src="{{ collage_items.accessory_lower.image_url }}"
+          alt="{{ collage_items.accessory_lower.name }}"
+        >
+      </a>
+      {% else %}
+      <img
+        class="accessory_lower-image"
+        src="{{ collage_items.accessory_lower.image_url }}"
+        alt="{{ collage_items.accessory_lower.name }}"
+      >
+      {% endif %}
+    </div>
+    {% endif %}
+
+  </div>
+</body>
+</html>
+

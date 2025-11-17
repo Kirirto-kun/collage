@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Коллаж образа — HTML шаблон</title>
+  <style>
+    /* ====================
+       БЫСТРЫЕ ПРАВКИ
+       1) Меняйте размер полотна: --board-size
+       2) Цвет фона: --board-bg
+       3) Толщина тени/радиус: --board-shadow, --board-radius
+       4) Все изображения и подписи заполняются в CONFIG ниже
+       ==================== */
+    :root{
+      --board-size: 1400px;   /* Квадратное полотно. Можно 1080px/1600px и т.п. */
+      --board-bg: #ffffff;
+      --board-radius: 22px;
+      --board-shadow: 0 18px 50px rgba(0,0,0,.08);
+      --label-color: #111;
+      --label-size: 15px;     /* размер подписи */
+      --label-leading: 1.25;  /* межстрочный */
+      --gap: 18px;            /* расстояние между областями */
+    }
+
+    html,body{height:100%;}
+    body{
+      margin:0; 
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";
+      background:#f5f6f8;
+      color:#0b0b0b;
+      display:flex; 
+      flex-direction:column; 
+      align-items:center; 
+      gap:20px;
+      padding:28px;
+    }
+
+    .controls{ display:flex; gap:12px; flex-wrap:wrap; }
+    .btn{
+      appearance:none; border:0; background:#111; color:#fff; 
+      padding:10px 14px; border-radius:12px; cursor:pointer; font-weight:600;
+    }
+    .btn.secondary{ background:#e9e9eb; color:#111; }
+
+    .board-wrap{ position:relative; }
+
+    /* Полотно коллажа */
+    .board{
+      width: var(--board-size);
+      height: var(--board-size);
+      background: var(--board-bg);
+      box-shadow: var(--board-shadow);
+      border-radius: var(--board-radius);
+      position: relative;
+      overflow: hidden;
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: repeat(12, 1fr);
+      gap: var(--gap);
+      padding: calc(var(--gap) * 1.5);
+    }
+
+    /* Общий блок предмета */
+    .item{ position:relative; display:flex; align-items:center; justify-content:center; }
+    .item img{ 
+      max-width:100%; max-height:100%; width:100%; height:100%; object-fit:contain; 
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,.08));
+    }
+
+    /* Подпись (бренд + тип) */
+    .label{
+      position:absolute; color:var(--label-color); font-size:var(--label-size); line-height:var(--label-leading); 
+      text-transform:none; letter-spacing:.2px; user-select:none; white-space:nowrap;
+      background:transparent; padding:0; font-weight:500;
+    }
+    .label b{ display:block; font-weight:700; letter-spacing:.3px; }
+
+    /* Позиции элементов — адаптированы под исходный референс */
+    .hat      { grid-column: 2 / span 3; grid-row: 1 / span 2; }
+    .coat     { grid-column: 2 / span 4; grid-row: 3 / span 6; }
+    .blazer   { grid-column: 6 / span 4; grid-row: 3 / span 5; }
+    .tie      { grid-column: 10 / span 2; grid-row: 2 / span 2; }
+    .trousers { grid-column: 10 / span 2; grid-row: 4 / span 7; }
+    .gloves   { grid-column: 8 / span 2; grid-row: 7 / span 2; }
+    .bag      { grid-column: 3 / span 3; grid-row: 9 / span 3; }
+    .shoes    { grid-column: 7 / span 3; grid-row: 9 / span 3; }
+
+    /* Позиции подписей относительно предметов */
+    .label.tl{ top:-6px; left:-4px; transform: translate(-0%, -100%); text-align:left; }
+    .label.tr{ top:-6px; right:-4px; transform: translate(0%, -100%); text-align:right; }
+    .label.bl{ bottom:-6px; left:-4px; transform: translate(-0%, 100%); text-align:left; }
+    .label.br{ bottom:-6px; right:-4px; transform: translate(0%, 100%); text-align:right; }
+
+    /* Тонкие направляющие (можно выключать) */
+    .guides .item{ outline:1px dashed rgba(0,0,0,.06); outline-offset:-6px; border-radius:14px; }
+
+    /* Скейл на маленьких экранах */
+    @media (max-width: 1100px){
+      :root{ --board-size: min(92vw, 1100px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="controls">
+    <button class="btn" id="downloadPng">Скачать PNG</button>
+    <button class="btn secondary" id="toggleGuides">Показать/скрыть направляющие</button>
+  </div>
+
+  <div class="board-wrap">
+    <div class="board" id="board">
+      <!-- Шляпа -->
+      <div class="item hat">
+        <img id="img-hat" alt="Шляпа"/>
+        <div class="label tl"><b id="brand-hat"></b><span id="type-hat"></span></div>
+      </div>
+      <!-- Пальто -->
+      <div class="item coat">
+        <img id="img-coat" alt="Пальто"/>
+        <div class="label tl"><b id="brand-coat"></b><span id="type-coat"></span></div>
+      </div>
+      <!-- Пиджак -->
+      <div class="item blazer">
+        <img id="img-blazer" alt="Пиджак"/>
+        <div class="label tr"><b id="brand-blazer"></b><span id="type-blazer"></span></div>
+      </div>
+      <!-- Галстук -->
+      <div class="item tie">
+        <img id="img-tie" alt="Галстук"/>
+        <div class="label tr"><b id="brand-tie"></b><span id="type-tie"></span></div>
+      </div>
+      <!-- Брюки -->
+      <div class="item trousers">
+        <img id="img-trousers" alt="Брюки"/>
+        <div class="label tr"><b id="brand-trousers"></b><span id="type-trousers"></span></div>
+      </div>
+      <!-- Перчатки -->
+      <div class="item gloves">
+        <img id="img-gloves" alt="Перчатки"/>
+        <div class="label bl"><b id="brand-gloves"></b><span id="type-gloves"></span></div>
+      </div>
+      <!-- Сумка -->
+      <div class="item bag">
+        <img id="img-bag" alt="Сумка"/>
+        <div class="label tl"><b id="brand-bag"></b><span id="type-bag"></span></div>
+      </div>
+      <!-- Обувь -->
+      <div class="item shoes">
+        <img id="img-shoes" alt="Обувь"/>
+        <div class="label bl"><b id="brand-shoes"></b><span id="type-shoes"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- html2canvas для экспорта PNG (работает, если изображения разрешают CORS) -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script>
+    /* =====================
+       КОНФИГ: замените ссылки и подписи.
+       Можно оставить пустую строку, чтобы скрыть подпись или элемент.
+       ===================== */
+    const CONFIG = {
+      hat:      { brand: 'BORSALINO',        type: 'Шляпа',     img: 'https://via.placeholder.com/700x500?text=Hat' },
+      coat:     { brand: 'CESARE ATTOLINI',  type: 'Пальто',    img: 'https://via.placeholder.com/900x1400?text=Coat' },
+      blazer:   { brand: 'KITON',            type: 'Пиджак',    img: 'https://via.placeholder.com/900x1100?text=Blazer' },
+      tie:      { brand: 'CANALI',           type: 'Галстук',   img: 'https://via.placeholder.com/300x900?text=Tie' },
+      trousers: { brand: 'CESARE ATTOLINI',  type: 'Брюки',     img: 'https://via.placeholder.com/600x1500?text=Trousers' },
+      gloves:   { brand: 'CESARE ATTOLINI',  type: 'Перчатки',  img: 'https://via.placeholder.com/800x500?text=Gloves' },
+      bag:      { brand: 'TOM FORD',         type: 'Сумка',     img: 'https://via.placeholder.com/1200x800?text=Bag' },
+      shoes:    { brand: 'BONTONI',          type: 'Дерби',     img: 'https://via.placeholder.com/1200x700?text=Shoes' }
+    };
+
+    // ——— Заполнение изображений и подписей из CONFIG
+    function fillSlot(key){
+      const item = CONFIG[key] || {};
+      const img = document.getElementById('img-'+key);
+      const brand = document.getElementById('brand-'+key);
+      const type = document.getElementById('type-'+key);
+
+      if(!img || !brand || !type) return;
+
+      // Если нет ссылки — скрываем блок
+      if(!item.img){
+        img.closest('.item').style.display = 'none';
+        return;
+      }
+
+      img.src = item.img; img.alt = (item.type || key);
+      brand.textContent = item.brand || '';
+      type.textContent = item.type || '';
+
+      // Скрыть подпись, если обе строки пустые
+      if(!(item.brand || item.type)){
+        brand.parentElement.style.display = 'none';
+      }
+    }
+
+    ['hat','coat','blazer','tie','trousers','gloves','bag','shoes'].forEach(fillSlot);
+
+    // Экспорт PNG
+    document.getElementById('downloadPng').addEventListener('click', async () => {
+      const board = document.getElementById('board');
+      const canvas = await html2canvas(board, {backgroundColor: null, scale: 2, useCORS: true});
+      const link = document.createElement('a');
+      link.download = 'collage.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    });
+
+    // Переключатель направляющих
+    const boardWrap = document.querySelector('.board-wrap');
+    document.getElementById('toggleGuides').addEventListener('click', ()=>{
+      boardWrap.classList.toggle('guides');
+    });
+  </script>
+
+  <!--
+  ИНСТРУКЦИЯ (кратко):
+  1) Сохраните этот файл как collage.html и откройте в браузере.
+  2) В блоке CONFIG замените img на ссылки ваших PNG/JPG с прозрачным фоном (желательно PNG).
+  3) Замените brand и type для каждой позиции.
+  4) Нажмите «Скачать PNG» для экспорта. Если картинки с другого домена, включите CORS у источника.
+  5) При необходимости измените --board-size и расположение предметов (классы .hat/.coat/…).
+  -->
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Smart‑Casual Collage • v2</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ffffff;
+  --text:#111;
+  --canvas-max:1200px;
+  --outer:clamp(12px,4vw,40px);
+  --shadow:drop-shadow(0 10px 16px rgba(0,0,0,.16))
+           drop-shadow(0 3px 6px rgba(0,0,0,.10));
+  --brand:clamp(11px,0.9vw,16px);
+  --type:clamp(10px,0.8vw,14px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;
+  background:#f5f6f8;color:var(--text);display:grid;place-items:center;padding:16px;
+}
+.canvas{
+  position:relative;width:100%;max-width:var(--canvas-max);aspect-ratio:4/3;
+  background:var(--bg);border-radius:20px;box-shadow:0 8px 36px rgba(0,0,0,.05);overflow:hidden;
+}
+.canvas::before{content:"";position:absolute;inset:var(--outer);pointer-events:none}
+.slot{position:absolute;filter:var(--shadow)}
+.slot img{width:100%;height:auto;display:block;object-fit:contain}
+.caption{position:absolute;left:0;right:0;top:100%;margin-top:8px;text-align:center;line-height:1.25}
+.brand{font-size:var(--brand);font-weight:600;text-transform:uppercase;letter-spacing:.03em}
+.type{font-size:var(--type);margin-top:2px}
+a{color:inherit;text-decoration:none}
+
+/* desktop positions – tightened */
+.hero {left:50%; top:6%;  width:26%; transform:translateX(-50%); z-index:3;}
+.bottom{left:14%; top:18%; width:22%; z-index:2;}
+.top   {left:65%; top:15%; width:24%; z-index:2;}
+.shoes {left:50%; top:52%; width:20%; transform:translateX(-50%); z-index:4;}
+.belt  {left:68%; top:50%; width:14%; z-index:5;}
+.watch {left:14%; top:4%;  width:10%; z-index:5;}
+
+/* mobile stacked */
+@media(max-width:680px){
+  .canvas{aspect-ratio:auto;padding:var(--outer) 0}
+  .slot{position:static;width:80%;max-width:320px;margin:0 auto 34px;transform:none!important}
+  .slot:last-child{margin-bottom:0}
+}
+</style>
+</head>
+<body>
+<section class="canvas">
+
+  <!-- HERO -->
+  <a class="slot hero" href="PRODUCT_URL_HERO" target="_blank">
+    <img src="IMG_HERO" alt="TITLE_HERO">
+    <div class="caption"><div class="brand">BRAND_HERO</div><div class="type">TYPE_HERO</div></div>
+  </a>
+
+  <!-- BOTTOM -->
+  <a class="slot bottom" href="PRODUCT_URL_BOTTOM" target="_blank">
+    <img src="IMG_BOTTOM" alt="TITLE_BOTTOM">
+    <div class="caption"><div class="brand">BRAND_BOTTOM</div><div class="type">TYPE_BOTTOM</div></div>
+  </a>
+
+  <!-- TOP -->
+  <a class="slot top" href="PRODUCT_URL_TOP" target="_blank">
+    <img src="IMG_TOP" alt="TITLE_TOP">
+    <div class="caption"><div class="brand">BRAND_TOP</div><div class="type">TYPE_TOP</div></div>
+  </a>
+
+  <!-- SHOES -->
+  <a class="slot shoes" href="PRODUCT_URL_SHOES" target="_blank">
+    <img src="IMG_SHOES" alt="TITLE_SHOES">
+    <div class="caption"><div class="brand">BRAND_SHOES</div><div class="type">TYPE_SHOES</div></div>
+  </a>
+
+  <!-- BELT -->
+  <a class="slot belt" href="PRODUCT_URL_BELT" target="_blank">
+    <img src="IMG_BELT" alt="TITLE_BELT">
+    <div class="caption"><div class="brand">BRAND_BELT</div><div class="type">TYPE_BELT</div></div>
+  </a>
+
+  <!-- WATCH -->
+  <a class="slot watch" href="PRODUCT_URL_WATCH" target="_blank">
+    <img src="IMG_WATCH" alt="TITLE_WATCH">
+    <div class="caption"><div class="brand">BRAND_WATCH</div><div class="type">TYPE_WATCH</div></div>
+  </a>
+
+</section>
+</body>
+</html>
